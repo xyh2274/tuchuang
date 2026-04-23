@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 元数据定义 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, viewport-fit=cover, initial-scale=1, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="darkreader-lock">
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- 基础路径和标题 -->
+    <base href="/">
+    <title>登录</title>
+
+    <!-- 网站图标和Manifest -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="manifest" crossorigin="use-credentials" href="manifest.json">
+
+    <!-- 样式表链接 -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="css/st-tailwind.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <link rel="stylesheet" type="text/css" href="css/user.css">
+    
+    <!-- 字体和图标库 -->
+    <link href="webfonts/NotoSans/stylesheet.css" rel="stylesheet">
+    <link href="webfonts/NotoSansMono/stylesheet.css" rel="stylesheet">
+    <link href="css/fontawesome.min.css" rel="stylesheet">
+    <link href="css/solid.min.css" rel="stylesheet">
+
+    <!-- 内联样式 -->
+    <style>
+        /* 颜色和尺寸变量定义 */
+        :root {
+            --primary-color: #5f7a64;
+            --text-color: #4F4F4F;
+            --text-color-light: #8a8a8a;
+            --card-bg: rgba(255, 255, 255, 0.2);
+            --input-bg: rgba(255, 255, 255, 0.3);
+            --border-color: rgba(255, 255, 255, 0.4);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --label-bg-color: #72907a;
+            --user-name-color: #666666;
+            --user-info-color: #444444;
+        }
+
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 页面主体样式 */
+        body {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+            position: relative;
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 背景模糊效果 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('images/background.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: blur(2px);
+            z-index: -1;
+        }
+
+        /* 主容器布局 */
+        .container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        /* 登录卡片样式 - 紧凑布局 */
+        .login-card {
+            width: 100%;
+            max-width: 380px;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Logo区域 - 紧凑间距 */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .logo {
+            width: 56px;
+            height: auto;
+            margin-bottom: 0.5rem;
+        }
+        h1 {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        
+        /* "选择一个账户"字体效果 */
+        .subtitle {
+            color: var(--text-color-light);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        
+        h3.subtitle {
+            font-weight: 500 !important;
+        }
+
+        /* 表单组通用样式 - 紧凑间距 */
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        /* 表单输入框样式 - 紧凑 */
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 0.875rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--input-bg);
+            font-size: 0.95rem;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+        }
+        .form-input::placeholder {
+            color: transparent;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(136, 171, 142, 0.25);
+        }
+
+        /* 浮动标签样式 */
+        .form-group label {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.875rem;
+            color: var(--text-color-light);
+            pointer-events: none;
+            transition: all 0.2s ease-out;
+            padding: 0 4px;
+        }
+        .form-input:focus + label,
+        .form-input:not(:placeholder-shown) + label {
+            top: -0.7rem;
+            left: 0.75rem;
+            font-size: 0.7rem;
+            color: #ffffff;
+            background: var(--label-bg-color);
+            border: 1px solid var(--label-bg-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* 提交按钮样式 - 紧凑 */
+        .submit-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            text-align: center;
+        }
+        .submit-btn:hover {
+            background: #7a9c80;
+            transform: translateY(-1px);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 链接样式 */
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* 消息提示区域样式 - 紧凑 */
+        #errorMessage {
+            color: #c82333;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 1rem;
+            min-height: 1em;
+            font-size: 0.9rem;
+        }
+        #recoverMessage {
+            text-align: center;
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            font-size: 0.9rem;
+        }
+
+        /* 关键修复：简化"返回登录"按钮样式，避免冲突 */
+        #cancelRecovery {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            text-align: center;
+            margin-top: 0.75rem;
+            display: block;
+        }
+        #cancelRecovery:hover {
+            background: var(--primary-color);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* ========== 紧凑的用户卡片设计 ========== */
+        
+        /* 用户列表容器 - 紧凑布局 */
+        #userList {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+            min-height: 110px;
+            padding: 0.5rem 0.3rem;
+        }
+
+        /* 紧凑的用户卡片 */
+        #userList > *,
+        #userList .userAvatar,
+        #userList [data-user],
+        #userList .user,
+        #userList .user-item,
+        .avatar,
+        .user-avatar {
+            width: 80px !important;
+            height: 100px !important;
+            cursor: pointer !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: relative !important;
+            
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            
+            margin: 0 !important;
+            padding: 0.5rem 0.3rem !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            
+            color: var(--user-name-color) !important;
+            font-size: 0.8rem !important;
+            font-weight: 600 !important;
+            text-align: center !important;
+            line-height: 1.2 !important;
+            text-shadow: 0 1px 3px rgba(255,255,255,0.9) !important;
+        }
+
+        /* 悬停效果 */
+        #userList > *:hover,
+        #userList .userAvatar:hover,
+        #userList [data-user]:hover,
+        #userList .user:hover,
+        #userList .user-item:hover,
+        .avatar:hover,
+        .user-avatar:hover {
+            transform: translateY(-2px) scale(1.02) !important;
+            background: var(--card-bg) !important;
+            border: 2px solid var(--primary-color) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 12px rgba(95, 122, 100, 0.2) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+        }
+
+        /* 选中状态 */
+        #userList > *.selected,
+        #userList .userAvatar.selected,
+        #userList [data-user].selected,
+        #userList .user.selected,
+        #userList .user-item.selected,
+        .avatar.selected,
+        .user-avatar.selected {
+            background: rgba(95, 122, 100, 0.12) !important;
+            border: 2px solid var(--primary-color) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 0 0 2px rgba(95, 122, 100, 0.3), 
+                        0 3px 8px rgba(95, 122, 100, 0.2) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            transform: translateY(-1px) !important;
+        }
+
+        /* 选中标记 - 紧凑 */
+        #userList > *.selected::after,
+        #userList .userAvatar.selected::after,
+        #userList [data-user].selected::after,
+        #userList .user.selected::after,
+        #userList .user-item.selected::after,
+        .avatar.selected::after,
+        .user-avatar.selected::after {
+            content: '✓' !important;
+            position: absolute !important;
+            top: 6px !important;
+            right: 6px !important;
+            background: var(--primary-color) !important;
+            color: white !important;
+            width: 18px !important;
+            height: 18px !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 10px !important;
+            font-weight: bold !important;
+            z-index: 10 !important;
+            box-shadow: 0 1px 4px rgba(95, 122, 100, 0.4) !important;
+        }
+
+        /* 紧凑的头像设计 */
+        #userList img,
+        #userList .userAvatar img,
+        #userList [data-user] img,
+        #userList .user img,
+        #userList .user-item img,
+        .avatar img,
+        .user-avatar img {
+            width: 42px !important;
+            height: 42px !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            margin-bottom: 4px !important;
+            
+            border: 2px solid rgba(255, 255, 255, 0.4) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+            background: #f5f5f5 !important;
+            
+            z-index: 2 !important;
+            position: relative !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        /* 头像悬停效果 */
+        #userList > *:hover img,
+        #userList .userAvatar:hover img,
+        #userList [data-user]:hover img,
+        #userList .user:hover img,
+        #userList .user-item:hover img,
+        .avatar:hover img,
+        .user-avatar:hover img {
+            border-color: rgba(255, 255, 255, 0.6) !important;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15) !important;
+            transform: scale(1.05) !important;
+        }
+
+        /* 清除内框容器 */
+        #userList .avatar-wrapper,
+        #userList .avatar-container,
+        #userList .img-wrapper,
+        #userList .img-container,
+        #userList .user-image,
+        #userList .profile-image,
+        #userList .user-photo,
+        #userList .profile-photo,
+        #userList div:not(.userName):not(.user-info):not(.user-detail) {
+            background: none !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            outline: none !important;
+        }
+
+        /* 紧凑的用户名 */
+        #userList .userName,
+        #userList > * {
+            color: var(--user-name-color) !important;
+            font-size: 0.8rem !important;
+            font-weight: 600 !important;
+            text-shadow: 0 1px 3px rgba(255,255,255,0.9) !important;
+            z-index: 3 !important;
+            position: relative !important;
+            
+            max-width: 75px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+            margin-top: 0 !important;
+            transition: all 0.3s ease !important;
+        }
+
+        /* 用户名悬停效果 */
+        #userList > *:hover,
+        #userList .userAvatar:hover {
+            color: var(--primary-color) !important;
+        }
+
+        /* 第二行小字 - 紧凑 */
+        #userList small,
+        #userList .user-info,
+        #userList .user-detail {
+            color: var(--user-info-color) !important;
+            font-size: 0.65rem !important;
+            font-weight: 400 !important;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.7) !important;
+            margin-top: 1px !important;
+            z-index: 3 !important;
+            position: relative !important;
+            transition: all 0.3s ease !important;
+        }
+
+        /* 默认用户图标 - 紧凑 */
+        #userList > *:not(:has(img))::before,
+        #userList .userAvatar:not(:has(img))::before {
+            content: '👤' !important;
+            font-size: 24px !important;
+            margin-bottom: 4px !important;
+            opacity: 0.65 !important;
+            z-index: 2 !important;
+        }
+
+        /* 处理原版的text_pole类 - 紧凑 */
+        .text_pole {
+            width: 100%;
+            padding: 0.75rem 0.875rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--input-bg);
+            font-size: 0.95rem;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+            margin-bottom: 1rem;
+        }
+        .text_pole:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(136, 171, 142, 0.25);
+        }
+
+        /* 处理原版的menu_button类 - 紧凑 */
+        .menu_button {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+        .menu_button:hover {
+            background: #7a9c80;
+            transform: translateY(-1px);
+        }
+
+        /* 确保flex布局类正常工作 */
+        .flex-container {
+            display: flex;
+        }
+        .flexFlowColumn {
+            flex-direction: column;
+        }
+        .alignItemsCenter {
+            align-items: center;
+        }
+        .justifySpaceEvenly {
+            justify-content: space-evenly;
+        }
+        .flexGap10 {
+            gap: 0.75rem;
+        }
+        .wide100p {
+            width: 100%;
+        }
+
+        /* 响应式优化 - 紧凑 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+            .login-card {
+                padding: 1.5rem;
+            }
+            #userList {
+                gap: 0.8rem;
+                min-height: 95px;
+                padding: 0.3rem;
+            }
+            #userList > *,
+            #userList .userAvatar,
+            #userList [data-user],
+            #userList .user,
+            #userList .user-item,
+            .avatar,
+            .user-avatar {
+                width: 75px !important;
+                height: 90px !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="login">
+    <div class="container">
+        <div class="login-card">
+            <!-- Logo和标题区域 -->
+            <div class="logo-section">
+                <img src="img/logo.png" alt="Logo" class="logo" />
+                <h1>SillyTavern</h1>
+                <!-- 登录提示，由JS控制显示 -->
+                <h3 id="normalLoginPrompt" class="subtitle">选择一个账户</h3>
+                <h3 id="discreetLoginPrompt" class="subtitle" style="display:none;">输入登录信息</h3>
+            </div>
+
+            <!-- 表单区域容器，ID用于JS交互 -->
+            <div id="userListBlock" class="wide100p">
+                <!-- 多用户列表 -->
+                <div id="userList" class="flex-container justifySpaceEvenly"></div>
+                
+                <!-- 用户句柄输入 -->
+                <div id="handleEntryBlock" style="display:none;" class="flex-container flexFlowColumn alignItemsCenter">
+                    <div class="form-group">
+                        <input id="userHandle" class="form-input" type="text" placeholder=" " autocomplete="username">
+                        <label for="userHandle">用户名</label>
+                    </div>
+                </div>
+                
+                <!-- 密码输入区域 -->
+                <div id="passwordEntryBlock" style="display:none;" class="flex-container flexFlowColumn alignItemsCenter">
+                    <div class="form-group">
+                        <input type="password" id="userPassword" class="form-input" placeholder=" " autocomplete="current-password" />
+                        <label for="userPassword">密码</label>
+                    </div>
+                    <div class="flex-container">
+                        <div id="loginButton" class="menu_button">登录</div>
+                    </div>
+                    <a id="recoverPassword" href="#" onclick="return false;">忘记密码？</a>
+                </div>
+
+                <!-- 密码恢复表单，默认隐藏 -->
+                <div id="passwordRecoveryBlock" style="display:none;" class="flex-container flexFlowColumn alignItemsCenter">
+                    <div id="recoverMessage"></div>
+                    <div class="form-group">
+                        <input type="text" id="recoveryCode" class="form-input" placeholder=" " />
+                        <label for="recoveryCode">恢复代码 (已发送至服务器后台)</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="newPassword" class="form-input" placeholder=" " />
+                        <label for="newPassword">新密码</label>
+                    </div>
+                    <div class="flex-container flexGap10">
+                        <div id="sendRecovery" class="menu_button">重置密码</div>
+                        <div id="cancelRecovery" class="menu_button">返回登录</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 错误消息容器 -->
+            <div class="neutral_warning" id="errorMessage"></div>
+        </div>
+    </div>
+
+    <!-- 核心JavaScript文件 -->
+    <script src="lib/jquery-3.5.1.min.js"></script>
+    
+    <!-- 关键修复：回到最简单有效的方式 -->
+    <script>
+        // 动态加载核心 login.js 以实现版本兼容
+        fetch('scripts/login.js')
+            .then(response => response.text())
+            .then(text => {
+                const script = document.createElement('script');
+                script.src = 'scripts/login.js';
+                
+                // 检查脚本内容是否包含 'import ' 或 'import{'
+                if (text.includes('import ') || text.includes('import{')) {
+                    script.type = 'module';
+                    console.log('检测到新版 login.js，以 module 模式加载。');
+                } else {
+                    console.log('检测到旧版 login.js，以传统模式加载。');
+                }
+                
+                document.body.appendChild(script);
+            })
+            .catch(error => {
+                console.error('加载 login.js 失败:', error);
+                // 如果加载失败，作为后备方案，默认以传统模式加载
+                const script = document.createElement('script');
+                script.src = 'scripts/login.js';
+                document.body.appendChild(script);
+            });
+
+        $(document).ready(function() {
+            console.log('页面加载完成，初始化事件处理器');
+            
+            // 修复：回到最简单直接的方式，类似之前工作的版本
+            $(document).on('click', '#cancelRecovery', function(e) {
+                console.log('返回登录按钮被点击');
+                e.preventDefault();
+                
+                // 执行返回登录操作
+                $('#passwordRecoveryBlock').hide();
+                $('#passwordEntryBlock').show();
+                $('#recoveryCode').val('');
+                $('#newPassword').val('');
+                $('#recoverMessage').text('');
+                $('#errorMessage').text('');
+                
+                console.log('返回登录操作完成');
+                return false;
+            });
+
+            // 用户选择事件
+            $(document).on('click', '#userList > *, .userAvatar, [data-user], .user, .user-item, .avatar, .user-avatar', function(e) {
+                // 移除其他用户的选中状态
+                $('#userList > *, .userAvatar, [data-user], .user, .user-item, .avatar, .user-avatar').removeClass('selected');
+                // 为当前点击的用户添加选中状态
+                $(this).addClass('selected');
+                
+                console.log('用户被选中:', $(this).text() || $(this).attr('data-user') || 'unknown');
+            });
+
+            // 监听DOM变化，应用紧凑布局
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1 && $(node).closest('#userList').length > 0) {
+                                console.log('检测到新用户元素:', node.tagName, node.className, node.textContent);
+                                
+                                const $node = $(node);
+                                
+                                // 应用紧凑布局设计
+                                $node.css({
+                                    'width': '80px',
+                                    'height': '100px',
+                                    'cursor': 'pointer',
+                                    'display': 'flex',
+                                    'flex-direction': 'column',
+                                    'align-items': 'center',
+                                    'justify-content': 'center',
+                                    'position': 'relative',
+                                    
+                                    'background': 'transparent',
+                                    'border': 'none',
+                                    'border-radius': '0',
+                                    'box-shadow': 'none',
+                                    'backdrop-filter': 'none',
+                                    
+                                    'margin': '0',
+                                    'padding': '0.5rem 0.3rem',
+                                    'transition': 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    
+                                    'color': 'var(--user-name-color)',
+                                    'font-size': '0.8rem',
+                                    'font-weight': '600',
+                                    'text-align': 'center',
+                                    'line-height': '1.2',
+                                    'text-shadow': '0 1px 3px rgba(255,255,255,0.9)'
+                                });
+
+                                // 紧凑头像处理
+                                $node.find('img').css({
+                                    'width': '42px',
+                                    'height': '42px',
+                                    'border-radius': '50%',
+                                    'object-fit': 'cover',
+                                    'margin-bottom': '4px',
+                                    'border': '2px solid rgba(255, 255, 255, 0.4)',
+                                    'box-shadow': '0 2px 8px rgba(0, 0, 0, 0.12)',
+                                    'background': '#f5f5f5',
+                                    'z-index': '2',
+                                    'position': 'relative',
+                                    'transition': 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                                });
+
+                                // 清除容器样式
+                                $node.find('*:not(img)').css({
+                                    'background': 'none',
+                                    'border': 'none',
+                                    'border-radius': '0',
+                                    'box-shadow': 'none',
+                                    'backdrop-filter': 'none',
+                                    '-webkit-backdrop-filter': 'none',
+                                    'padding': '0',
+                                    'margin': '0',
+                                    'outline': 'none'
+                                });
+
+                                // 确保文字可见
+                                $node.find('.userName, small, .user-info, .user-detail').css({
+                                    'z-index': '3',
+                                    'position': 'relative'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            observer.observe(document.getElementById('userList'), {
+                childList: true,
+                subtree: true
+            });
+        });
+    </script>
+</body>
+</html>
